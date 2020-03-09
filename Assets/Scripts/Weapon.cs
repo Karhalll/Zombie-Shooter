@@ -15,19 +15,47 @@ public class Weapon : MonoBehaviour
     [Header("Stats")]
     [SerializeField] float damage = 30f;
     [SerializeField] float range = 100f;
+    [SerializeField] float timeBetwenShoots = 0.5f;
+
+    bool canShoot = true;
+    Ammo ammoSlot;
+
+    private void Awake() 
+    {
+        ammoSlot = GameObject.FindGameObjectWithTag("Player").GetComponent<Ammo>();
+    }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && canShoot == true)
         {
-            Shoot();
-        }
+            StartCoroutine(Shoot());
+        }  
     }
 
-    private void Shoot()
+    IEnumerator Shoot()
     {
-        PlayMuzzleFlash();
-        ProccesRaycast();
+        canShoot = false;
+        if (HasAmmo()) 
+        { 
+            ammoSlot.ReduceCurrentAmmo();
+            PlayMuzzleFlash();
+            ProccesRaycast(); 
+        }
+        yield return new WaitForSeconds(timeBetwenShoots);
+        canShoot = true;
+    }
+
+    private bool HasAmmo()
+    {
+        if (ammoSlot.GetCurrentAmmo() <= 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private void PlayMuzzleFlash()
