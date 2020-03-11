@@ -341,6 +341,7 @@ MonoBehaviour:
   hitEffectPrefab: {fileID: 993160456585854178, guid: 67f042811cdf4ea49972a6b3233f3856,
     type: 3}
   hitEffectDeathTime: 0.2
+  ammoType: 1
   damage: 200
   range: 10
   timeBetwenShoots: 1

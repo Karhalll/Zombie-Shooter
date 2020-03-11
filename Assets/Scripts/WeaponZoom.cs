@@ -35,20 +35,37 @@ public class WeaponZoom : MonoBehaviour
         {
             if (zoomedInToggle == false)
             {
-                zoomedInToggle = true;
-                mainCamera.fieldOfView = zoomedIn;
-
-                mouseLook.XSensitivity = basicSensX * sensIn;
-                mouseLook.YSensitivity = basicSensY * sensIn;
+                ZoomIn();
             }
             else
             {
-                zoomedInToggle = false;
-                mainCamera.fieldOfView = zoomedOut;
-
-                mouseLook.XSensitivity = basicSensX * sensOut;
-                mouseLook.YSensitivity = basicSensY * sensOut;
+                ZoomOut();
             }
         }
     }
+
+    private void OnDisable()
+    {
+        ZoomOut();
+    }
+
+    private void ZoomIn()
+    {
+        zoomedInToggle = true;
+        mainCamera.fieldOfView = zoomedIn;
+
+        mouseLook.XSensitivity = basicSensX * sensIn;
+        mouseLook.YSensitivity = basicSensY * sensIn;
+    }
+
+    private void ZoomOut()
+    {
+        zoomedInToggle = false;
+        mainCamera.fieldOfView = zoomedOut;
+
+        mouseLook.XSensitivity = basicSensX * sensOut;
+        mouseLook.YSensitivity = basicSensY * sensOut;
+    }
+
+    
 }

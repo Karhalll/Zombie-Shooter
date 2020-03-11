@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Weapon : MonoBehaviour
 {
@@ -11,14 +12,21 @@ public class Weapon : MonoBehaviour
     [SerializeField] ParticleSystem muzzleFlashVFXPrefab = null;
     [SerializeField] GameObject hitEffectPrefab = null;
     [SerializeField] float hitEffectDeathTime = 0.2f;
+    [SerializeField] TextMeshProUGUI ammoUIText = null;
 
     [Header("Stats")]
+    [SerializeField] AmmoType ammoType = AmmoType.Bullets;
     [SerializeField] float damage = 30f;
     [SerializeField] float range = 100f;
     [SerializeField] float timeBetwenShoots = 0.5f;
 
     bool canShoot = true;
     Ammo ammoSlot;
+
+    private void OnEnable() 
+    {
+        canShoot = true;
+    }
 
     private void Awake() 
     {
@@ -27,10 +35,17 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        UpdateAmmoUI();
         if (Input.GetButtonDown("Fire1") && canShoot == true)
         {
             StartCoroutine(Shoot());
         }  
+    }
+
+    private void UpdateAmmoUI()
+    {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoUIText.text = currentAmmo.ToString("# ###");
     }
 
     IEnumerator Shoot()
@@ -38,7 +53,7 @@ public class Weapon : MonoBehaviour
         canShoot = false;
         if (HasAmmo()) 
         { 
-            ammoSlot.ReduceCurrentAmmo();
+            ammoSlot.ReduceCurrentAmmo(ammoType);
             PlayMuzzleFlash();
             ProccesRaycast(); 
         }
@@ -48,7 +63,7 @@ public class Weapon : MonoBehaviour
 
     private bool HasAmmo()
     {
-        if (ammoSlot.GetCurrentAmmo() <= 0)
+        if (ammoSlot.GetCurrentAmmo(ammoType) <= 0)
         {
             return false;
         }
